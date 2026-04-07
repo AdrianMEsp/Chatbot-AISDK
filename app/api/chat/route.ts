@@ -10,8 +10,6 @@ export async function POST(req: Request) {
     model: openai('gpt-4o'),
     messages: await convertToModelMessages(messages),
   });
-
-  console.log(result.toTextStreamResponse());
   
   return result.toUIMessageStreamResponse();
 }
