@@ -17,3 +17,28 @@ export async function saveLead(lead: QualifiedLead) {
   if (error) throw new Error(error.message);
   return data;
 }
+
+export async function getStaleLeads({ olderThanHours }: { olderThanHours: number }) {
+  const cutoff = new Date(Date.now() - olderThanHours * 60 * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from('leads')
+    .select('id, email')
+    .eq('status', 'qualified_no_appointment')
+    .lt('created_at', cutoff);
+
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+export async function markFollowUpSent(leadId: string) {
+  const { error } = await supabase
+    .from('leads')
+    .update({ 
+      status: 'follow_up_sent',
+      last_follow_up_at: new Date().toISOString()
+    })
+    .eq('id', leadId);
+
+  if (error) throw new Error(error.message);
+}
