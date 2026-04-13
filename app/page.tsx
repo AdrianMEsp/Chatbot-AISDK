@@ -60,12 +60,12 @@ export default function Chat() {
                 <Sparkles size={40} className="text-indigo-400" />
               </div>
               <h1 className="text-3xl font-bold mb-4 bg-linear-to-r from-white to-zinc-500 bg-clip-text text-transparent">
-                How can I help you today?
+                Asistente de ventas
               </h1>
-              <p className="text-zinc-400 max-w-md mx-auto leading-relaxed">
+{/*               <p className="text-zinc-400 max-w-md mx-auto leading-relaxed">
                 Connect with GPT-4o using the Vercel AI SDK.
                 Experience real-time streaming and high-fidelity responses.
-              </p>
+              </p> */}
             </div>
           ) : (
             <div className="divide-y divide-zinc-800/50">
@@ -99,7 +99,7 @@ export default function Chat() {
             <input
               className="flex-1 bg-transparent px-4 py-3 focus:outline-none text-zinc-100 placeholder-zinc-500 transition-all font-medium"
               value={input}
-              placeholder="Type your message..."
+              placeholder="Escribe tu datos (mail, nombre, presupuesto e interes en el producto)"
               onChange={(e) => setInput(e.target.value)}
             />
             <button
