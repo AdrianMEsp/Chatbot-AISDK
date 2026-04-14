@@ -33,7 +33,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           'text-xs font-semibold tracking-wider uppercase',
           isUser ? 'text-indigo-400' : 'text-zinc-500'
         )}>
-          {isUser ? 'You' : 'Assistant'}
+          {isUser ? 'Usted' : 'Asistante'}
         </span>
         <div className="text-sm md:text-base leading-relaxed text-zinc-200 whitespace-pre-wrap wrap-break-word">
           <div className="text-sm md:text-base leading-relaxed text-zinc-200 whitespace-pre-wrap break-words">
