@@ -1,3 +1,4 @@
+import { cavemanSkill } from '@/lib/skills/caverman';
 import { onboardingCROSkill } from '@/lib/skills/onboarding-cro';
 import { captureLead } from '@/lib/tools/leadTool';
 import { openai } from '@ai-sdk/openai';
@@ -11,7 +12,10 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai('gpt-4o-mini'),
-    system: `${onboardingCROSkill}
+    system: 
+    `${cavemanSkill}\n\n
+
+    ${onboardingCROSkill}
 
 ---
 
