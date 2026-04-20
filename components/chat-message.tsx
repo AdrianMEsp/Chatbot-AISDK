@@ -36,7 +36,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {isUser ? 'Usted' : 'Asistante'}
         </span>
         <div className="text-sm md:text-base leading-relaxed text-zinc-200 whitespace-pre-wrap wrap-break-word">
-          <div className="text-sm md:text-base leading-relaxed text-zinc-200 whitespace-pre-wrap break-words">
+          <div className="text-sm md:text-base leading-relaxed text-zinc-200 whitespace-pre-wrap wrap-break-word">
             {(message.parts ?? []).filter(isTextUIPart).map((part, i) => (
               <span key={i}>{part.text}</span>
             ))}
