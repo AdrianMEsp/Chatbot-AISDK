@@ -1,6 +1,8 @@
 import { cavemanSkill } from '@/lib/skills/caverman';
 import { onboardingCROSkill } from '@/lib/skills/onboarding-cro';
+import { appointmentSetterSkill } from '@/lib/skills/appointment-setter';
 import { captureLead } from '@/lib/tools/leadTool';
+import { listSlotsTool, scheduleAppointmentTool } from '@/lib/tools/calendarTool';
 import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, stepCountIs } from 'ai';
 
@@ -15,7 +17,9 @@ export async function POST(req: Request) {
     system: 
     `${cavemanSkill}\n\n
 
-    ${onboardingCROSkill}
+    ${onboardingCROSkill}\n\n
+
+    ${appointmentSetterSkill}
 
 ---
 
@@ -24,9 +28,10 @@ export async function POST(req: Request) {
 Cuando el usuario muestre interés en contratar o hablar con ventas, cambiá al modo de calificación:
 - Recopilá de forma conversacional: nombre, email, presupuesto e interés (bajo/medio/alto).
 - Cuando tengas los 4 datos confirmados, llamá a captureLead.
+- Luego de calificar, procede a agendar una cita usando las herramientas de calendario.
 - Nunca inventes información.`,
     messages: await convertToModelMessages(messages),
-    tools: { captureLead },
+    tools: { captureLead, listSlotsTool, scheduleAppointmentTool },
     stopWhen: stepCountIs(5), // permite multi-turn tool calls
   });
 
