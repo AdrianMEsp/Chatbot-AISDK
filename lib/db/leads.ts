@@ -42,3 +42,16 @@ export async function markFollowUpSent(leadId: string) {
 
   if (error) throw new Error(error.message);
 }
+
+export async function getLeadByEmail(email: string) {
+  const { data, error } = await supabase
+    .from('leads')
+    .select('*')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) return null;
+  return data;
+}

@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { tool } from 'ai';
 import { listAvailableSlots, createCalendarEvent } from '@/lib/mcp/google-calendar';
+import { getLeadByEmail } from '@/lib/db/leads';
+import { triggerEmailWorkflow } from '@/lib/mcp/resend';
 
 export const listSlotsTool = tool({
   description: 'Muestra los espacios disponibles en el calendario para los próximos días.',
@@ -40,6 +42,23 @@ export const scheduleAppointmentTool = tool({
         end,
         attendeeEmail: email,
       });
+
+      // Obtener datos del lead para el correo del administrador
+      const leadData = await getLeadByEmail(email);
+
+      // Disparar flujo de correo dual (Admin y Cliente)
+      await triggerEmailWorkflow({
+        to: email,
+        leadId: leadData?.id || 'new_appointment',
+        template: 'appointment_confirmed',
+        data: {
+          summary,
+          start,
+          description,
+          leadData
+        }
+      });
+
       return {
         success: true,
         eventId: event.id,
