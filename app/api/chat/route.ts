@@ -1,6 +1,6 @@
 import { cavemanSkill } from '@/lib/skills/caverman';
 import { onboardingCROSkill } from '@/lib/skills/onboarding-cro';
-import { appointmentSetterSkill } from '@/lib/skills/appointment-setter';
+import { getAppointmentSetterSkill } from '@/lib/skills/appointment-setter';
 import { captureLead } from '@/lib/tools/leadTool';
 import { listSlotsTool, scheduleAppointmentTool } from '@/lib/tools/calendarTool';
 import { openai } from '@ai-sdk/openai';
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     ${onboardingCROSkill}\n\n
 
-    ${appointmentSetterSkill}
+    ${getAppointmentSetterSkill()}
 
 ---
 
