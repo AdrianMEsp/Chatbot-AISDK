@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 Chat IASDK - Agentic Assistant Framework
 
-## Getting Started
+Una implementación avanzada de asistentes de IA utilizando **Vercel AI SDK**, **Next.js 15**, y una arquitectura modular de **Skills** y **Tools (MCP)**. Este proyecto está diseñado para ser altamente adaptable, permitiendo calificar leads, enviar correos y extender las capacidades del agente de forma sencilla.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Tecnologías Core
+
+- **Framework:** Next.js (App Router)
+- **AI Engine:** Vercel AI SDK (`ai`)
+- **Modelos:** OpenAI (GPT-4o / GPT-4o-mini)
+- **Base de Datos:** Supabase
+- **Correos:** Resend
+- **UI/UX:** Framer Motion, Lucide React, Tailwind CSS
+
+---
+
+## 🛠️ Configuración Inicial
+
+1. **Clonar y instalar dependencias:**
+   ```bash
+   npm install
+   ```
+
+2. **Variables de Entorno:**
+   Crea un archivo `.env.local` con las siguientes claves:
+   ```env
+   OPENAI_API_KEY=tu_clave_aqui
+   RESEND_API_KEY=tu_clave_aqui
+   MAILPRIMERO=email_receptor_pruebas
+   SUPABASE_SERVICE_ROLE_KEY=tu_clave_supabase
+   NEXT_PUBLIC_SUPABASE_URL=tu_url_supabase
+   CRON_SECRET=secreto_para_crons
+   ```
+
+3. **Ejecutar en desarrollo:**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 🧠 Sistema de Skills (Habilidades)
+
+Las **Skills** son fragmentos de comportamiento, personalidad o conocimiento especializado que se inyectan en el prompt del sistema del agente. Esto permite modularizar el comportamiento del bot sin saturar un solo archivo de configuración.
+
+### Cómo crear una Skill
+Crea un archivo en `lib/skills/[nombre].ts`:
+```typescript
+// lib/skills/expert.ts
+export const expertSkill = `
+Eres un experto en [Tema].
+- Siempre respondes de forma concisa.
+- Usas terminología técnica precisa.
+`;
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Cómo registrar una Skill
+En `app/api/chat/route.ts`, importa e inyecta la skill en el `system` prompt:
+```typescript
+import { expertSkill } from '@/lib/skills/expert';
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+const result = streamText({
+  model: openai('gpt-4o-mini'),
+  system: `${expertSkill}\n\nOtras instrucciones...`,
+  // ...
+});
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔧 MCP & Tools (Capacidades Funcionales)
 
-To learn more about Next.js, take a look at the following resources:
+El proyecto utiliza un enfoque inspirado en **MCP (Model Context Protocol)** para exponer funciones locales al modelo de lenguaje. Esto permite que el agente realice acciones como guardar leads en la base de datos o disparar flujos de trabajo de email.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Estructura de una Tool
+Las herramientas se definen en `lib/tools/` y utilizan `zod` para la validación de esquemas.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ejemplo de `captureLead`:
+1. **Definición:** En `lib/tools/leadTool.ts`, se define la lógica de negocio y el esquema de entrada.
+2. **Integración:** El agente decide cuándo llamar a la tool basándose en la descripción proporcionada.
 
-## Deploy on Vercel
+```typescript
+export const captureLead = tool({
+  description: "Llama SOLO cuando tengas nombre, email, presupuesto e interés.",
+  inputSchema: leadSchema,
+  execute: async (lead) => {
+    // Lógica: Guardar en DB + Enviar Email (MCP Workflow)
+    const saved = await saveLead(lead);
+    await triggerEmailWorkflow({ leadId: saved.id });
+    return { status: 'success' };
+  }
+});
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Flujos MCP (Model Context Protocol)
+Ubicados en `lib/mcp/`, estos módulos manejan integraciones externas complejas. Por ejemplo, `lib/mcp/resend.ts` actúa como un conector para flujos de automatización de correo.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 💬 Frontend: ChatWidget
+
+El componente `ChatWidget` es un componente de cliente que puedes colocar en cualquier parte de tu aplicación para habilitar el chat emergente.
+
+- **Ubicación:** `components/ChatWidget.tsx`
+- **Características:** 
+  - Estado de streaming (animaciones de carga).
+  - Persistencia de mensajes en UI.
+  - Diseño premium con `framer-motion`.
+
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+├── app/
+│   └── api/chat/route.ts      # Endpoint principal del agente
+├── components/
+│   ├── chat-message.tsx       # Renderizado de mensajes
+│   └── ChatWidget.tsx         # Widget de chat flotante
+├── lib/
+│   ├── mcp/                   # Integraciones de servicios (Resend, etc)
+│   ├── skills/                # Prompts de comportamiento modular
+│   ├── tools/                 # Herramientas funcionales (Vercel AI tools)
+│   └── db/                    # Lógica de base de datos (Supabase)
+└── package.json
+```
+
+---
+
+## 🔗 Recursos Adicionales
+- [Vercel AI SDK Docs](https://sdk.vercel.ai/docs)
+- [Agent Skills Inspiration](https://skills.sh/)
+- [Next.js Documentation](https://nextjs.org/docs)

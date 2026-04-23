@@ -14,8 +14,8 @@ export type QualifiedLead = z.infer<typeof leadSchema>;
 
 export const captureLead = tool({
   description: `Llama SOLO cuando tengas nombre, email, presupuesto e interés confirmados.`,
-  inputSchema: leadSchema, // ✅ pasar zod schema directo, sin zodSchema()
-  execute: async (lead) => {  // ✅ sin tipar el argumento, se infiere solo
+  inputSchema: leadSchema,
+  execute: async (lead) => {
     const savedLead = await saveLead(lead);
     await triggerEmailWorkflow({ to: lead.email, leadId: savedLead.id });
     return {
