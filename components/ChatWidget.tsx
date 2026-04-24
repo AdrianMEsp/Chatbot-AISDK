@@ -56,8 +56,8 @@ export default function ChatWidget() {
           */
           className="
             fixed bottom-4 right-4 
-            w-[95%] max-w-sm sm:max-w-md md:w-96 
-            h-[70vh] sm:h-150 
+            w-[90%] max-w-sm sm:max-w-md md:w-96 
+            h-[50vh] sm:h-50 
             bg-white text-zinc-900 
             border border-zinc-200
             rounded-xl shadow-2xl flex flex-col overflow-hidden
