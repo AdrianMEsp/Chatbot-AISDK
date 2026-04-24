@@ -13,6 +13,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === 'user';
 
   return (
+    /* Old Style:
     <motion.div
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -44,5 +45,16 @@ export function ChatMessage({ message }: ChatMessageProps) {
         </div>
       </div>
     </motion.div>
+    */
+    <div className="flex flex-col mb-4 text-zinc-800">
+      <div className="font-bold text-sm mb-1">
+        {isUser ? 'User:' : 'AI:'}
+      </div>
+      <div className="text-sm whitespace-pre-wrap">
+        {(message.parts ?? []).filter(isTextUIPart).map((part, i) => (
+          <span key={i}>{part.text}</span>
+        ))}
+      </div>
+    </div>
   );
 }
