@@ -32,10 +32,10 @@ export default function ChatWidget() {
     <>
       {/* Botón flotante */}
       {!isOpen && (
-          /* Old Style: 
-          className="fixed bottom-4 right-4 p-4 bg-indigo-600 rounded-full shadow-lg text-white hover:bg-indigo-500 transition" 
-          */
-         <button
+        /* Old Style: 
+        className="fixed bottom-4 right-4 p-4 bg-indigo-600 rounded-full shadow-lg text-white hover:bg-indigo-500 transition" 
+        */
+        <button
           className="fixed bottom-4 right-4 p-4 bg-black rounded-full shadow-lg text-white hover:bg-zinc-800 transition"
           onClick={() => setIsOpen(true)}
         >
@@ -54,14 +54,26 @@ export default function ChatWidget() {
             rounded-xl shadow-2xl flex flex-col overflow-hidden
           "
           */
+
+          /* Pre mobile
           className="
             fixed bottom-4 right-4 
-            w-[95%] max-w-sm sm:max-w-md md:w-96 
-            h-[70vh] sm:h-150 
+            w-[90%] max-w-sm sm:max-w-md md:w-96 
+            h-[50vh] sm:h-50 
             bg-white text-zinc-900 
             border border-zinc-200
             rounded-xl shadow-2xl flex flex-col overflow-hidden
-          "
+          " */
+
+          className="
+    fixed bottom-0 left-1/2 -translate-x-1/2 
+    sm:bottom-4 sm:right-4 sm:left-auto sm:translate-x-0
+    w-[90%] max-w-sm sm:max-w-md md:w-96 
+    h-[50vh] sm:h-70 mb-4
+    bg-white text-zinc-900 
+    border border-zinc-200
+    rounded-t-xl sm:rounded-xl shadow-2xl flex flex-col overflow-hidden
+  "
         >
           {/* Header */}
           {/* <header className="
@@ -89,11 +101,11 @@ export default function ChatWidget() {
             {messages.length === 0 ? (
               /*<div className="flex flex-col items-center justify-center text-center h-full">
                 <Sparkles size={40} className="text-zinc-300 mb-4" /* Old: text-indigo-400 */ /*/>
-                <h1 className="text-lg font-bold">Bienvenido</h1>
-                <p className="text-zinc-500 text-sm mt-2">
-                  Escribe tu nombre, email, presupuesto e interés.
-                </p>
-              </div>*/
+            <h1 className="text-lg font-bold">Bienvenido</h1>
+            <p className="text-zinc-500 text-sm mt-2">
+              Escribe tu nombre, email, presupuesto e interés.
+            </p>
+          </div>*/
               <div></div>
             ) : (
               <div className="space-y-4">
@@ -116,7 +128,7 @@ export default function ChatWidget() {
           <form
             onSubmit={handleSubmit}
             className="flex items-center bg-white border-t border-zinc-100 p-4"
-            /* Old Style: bg-zinc-900 border-zinc-800 p-2 */
+          /* Old Style: bg-zinc-900 border-zinc-800 p-2 */
           >
             <input
               className="
